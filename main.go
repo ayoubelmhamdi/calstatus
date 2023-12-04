@@ -64,7 +64,8 @@ func addText(text string, delay string) {
 }
 
 func addTextAt(text string, at string) {
-	date, err := time.Parse("2006-01-02 15:04:05", at)
+	location, _ := time.LoadLocation("Africa/Casablanca")
+	date, err := time.ParseInLocation("2006-01-02 15:04", at, location)
 	if err != nil {
 		fmt.Println("Error:", err)
 		os.Exit(1)
