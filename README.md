@@ -71,6 +71,7 @@ This project is still in development, and needs more features. I will be happy t
     - [ ] Create a dmenu to pick time for the `--at` flag.
     - [ ] Create a dmenu to remove text from the `calender.json` file.
     - [ ] Create a dmenu to edit text in the `calender.json` file.
+    - [ ] use profile mode(home/work) to add/retrieve text.
     - [ ] Create a frontend for the `calender.json` file with flutter/react/flet/raylib/pure js.
 
 - Data Source
