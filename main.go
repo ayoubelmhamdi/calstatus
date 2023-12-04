@@ -14,11 +14,12 @@ import (
 var (
 	addFlag  = flag.String("add", "", "Add a new text")
 	timeFlag = flag.String("time", "", "Time delay for the text to appear")
+	atFlag   = flag.String("at", "", "Specific time for the text to appear")
 	fileName = "texts.json"
 )
 
 type Text struct {
-	Time time.Time
+	Time int64
 	Text string
 }
 
@@ -26,7 +27,14 @@ func main() {
 	flag.Parse()
 
 	if *addFlag != "" {
-		addText(*addFlag, *timeFlag)
+		if *atFlag != "" {
+			addTextAt(*addFlag, *atFlag)
+		} else if *timeFlag != "" {
+			addText(*addFlag, *timeFlag)
+		} else {
+			fmt.Println("Error: Please provide either --time or --at flag")
+			os.Exit(1)
+		}
 	} else {
 		printText()
 	}
@@ -45,7 +53,24 @@ func addText(text string, delay string) {
 		date = date.Add(duration)
 	}
 
-	textWithDate := Text{Time: date, Text: text}
+	textWithDate := Text{Time: date.Unix(), Text: text}
+
+	texts := readTexts()
+	texts = append(texts, textWithDate)
+	sortTexts(texts)
+	writeTexts(texts)
+
+	fmt.Println("Done")
+}
+
+func addTextAt(text string, at string) {
+	date, err := time.Parse("2006-01-02 15:04:05", at)
+	if err != nil {
+		fmt.Println("Error:", err)
+		os.Exit(1)
+	}
+
+	textWithDate := Text{Time: date.Unix(), Text: text}
 
 	texts := readTexts()
 	texts = append(texts, textWithDate)
@@ -60,7 +85,7 @@ func printText() {
 
 	var nextText *Text
 	for _, text := range texts {
-		if text.Time.After(time.Now()) {
+		if text.Time > time.Now().Unix() {
 			nextText = &text
 			break
 		}
@@ -112,7 +137,7 @@ func writeTexts(texts []Text) {
 
 func sortTexts(texts []Text) {
 	sort.Slice(texts, func(i, j int) bool {
-		return texts[i].Time.Before(texts[j].Time)
+		return texts[i].Time < texts[j].Time
 	})
 }
 
