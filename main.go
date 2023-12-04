@@ -12,10 +12,10 @@ import (
 )
 
 var (
-	addFlag  = flag.String("add", "", "Add a new text")
+	addFlag  = flag.String("text", "", "Add a new text")
 	timeFlag = flag.String("time", "", "Time delay for the text to appear")
 	atFlag   = flag.String("at", "", "Specific time for the text to appear")
-	fileName = "texts.json"
+	fileName = "calendar.json"
 )
 
 type Text struct {
